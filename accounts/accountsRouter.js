@@ -75,18 +75,30 @@ router.put("/:id", (req, res) => {
     .update(changes)
     .then((account) => {
       if (account) {
-        res
-          .status(200)
-          .json({
-            message: `The account with an ID of ${id} has successffully been updated.`,
-          });
+        res.status(200).json({
+          message: `The account with an ID of ${id} has successffully been updated.`,
+        });
       } else {
-        res
-          .status(404)
-          .json({
-            message: "There is no account associated with the specified ID.",
-          });
+        res.status(404).json({
+          message: "There is no account associated with the specified ID.",
+        });
       }
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(500).json({ error: error.message });
+    });
+});
+
+router.delete("/:id", (req, res) => {
+  const { id } = req.params;
+  db("accounts")
+    .where({ id })
+    .del()
+    .then((account) => {
+      res.status(200).json({
+        message: `The account with ID ${id} has successfully been deleted.`,
+      });
     })
     .catch((error) => {
       console.log(error);
